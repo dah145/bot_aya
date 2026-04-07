@@ -1,0 +1,30 @@
+name: Monitor AyA Costa Rica
+
+on:
+  schedule:
+    # Se ejecuta en el minuto 0 de cada hora (Ej: 1:00, 2:00, 3:00...)
+    - cron: '0 * * * *'
+  workflow_dispatch: # Esto nos agrega un botón para ejecutarlo manualmente y probar
+
+jobs:
+  revisar_agua:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Clonar el código
+        uses: actions/checkout@v4
+
+      - name: Configurar entorno de Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: pip install requests
+
+      - name: Ejecutar el bot
+        env:
+          # Aquí inyectamos los secretos de GitHub al script de Python
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python bot_aya.py
