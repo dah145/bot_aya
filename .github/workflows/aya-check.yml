@@ -8,6 +8,10 @@ on:
 jobs:
   run-check:
     runs-on: ubuntu-latest
+    env:
+      # Opt into Node.js 24 for JavaScript-based GitHub actions
+      # to avoid deprecation warnings with actions/checkout@v4 and actions/setup-python@v5.
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout repository
