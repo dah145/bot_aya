@@ -20,6 +20,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Debug trigger source
+        run: |
+          echo "GITHUB_EVENT_NAME=$GITHUB_EVENT_NAME"
+          echo "GITHUB_REF=$GITHUB_REF"
+          echo "GITHUB_SHA=$GITHUB_SHA"
+          echo "GITHUB_WORKFLOW=$GITHUB_WORKFLOW"
+          if [ -f "$GITHUB_EVENT_PATH" ]; then
+            echo "Event JSON content:"
+            cat "$GITHUB_EVENT_PATH"
+          else
+            echo "No GITHUB_EVENT_PATH available"
+          fi
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
