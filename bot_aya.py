@@ -52,31 +52,42 @@ def revisar_pagina():
         if response.status_code == 200:
             data = response.json()
 
-            if not data.get("entidad"):
+            entidades = data.get("entidad")
+            if not entidades:
                 print("No se encontraron interrupciones.")
-                enviar_mensaje_telegram("Revisión completada. No hay avisos de agua potable en este momento.")
                 return
 
-            print(f"Se encontraron {len(data['entidad'])} interrupciones.")
+            interrupciones_agua = [
+                item for item in entidades
+                if re.search(TEXTO_BUSCADO, str(item.get("descripcion", "")), re.IGNORECASE)
+            ]
+
+            if not interrupciones_agua:
+                print("No se detectaron interrupciones de agua potable.")
+                return
+
+            print(f"Se encontraron {len(interrupciones_agua)} interrupciones de agua potable.")
             mensajes = []
-            for item in data["entidad"]:
+            for item in interrupciones_agua:
                 mensajes.append(
                     f"ID: {item.get('idInterrupcion')}\nInicio: {item.get('inicioAfectacion')}\nFin: {item.get('finAfectacion')}\nDescripción: {item.get('descripcion')}"
                 )
 
             alerta = (
-                "¡Alerta! Se detectaron interrupciones en la API del AyA.\n\n"
+                "¡Alerta! Se detectaron interrupciones del servicio de agua potable en la API del AyA.\n\n"
                 + "\n\n".join(mensajes[:3])
                 + f"\n\nRevisa el enlace: {URL}"
             )
             enviar_mensaje_telegram(alerta)
         else:
-            print(f"Error al acceder a la API. Código: {response.status_code}")
-            enviar_mensaje_telegram(f"Error al acceder a la API del AyA. Código: {response.status_code}")
+            error_text = f"Error al acceder a la API del AyA. Código: {response.status_code}"
+            print(error_text)
+            enviar_mensaje_telegram(error_text)
 
     except Exception as e:
-        print(f"Ocurrió un error de conexión: {e}")
-        enviar_mensaje_telegram(f"Ocurrió un error de conexión con la API del AyA: {e}")
+        error_text = f"Ocurrió un error de conexión con la API del AyA: {e}"
+        print(error_text)
+        enviar_mensaje_telegram(error_text)
 
 if __name__ == "__main__":
     revisar_pagina()
