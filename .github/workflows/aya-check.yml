@@ -11,6 +11,8 @@ on:
 jobs:
   run-check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       # Opt into Node.js 24 for JavaScript-based GitHub actions
       # to avoid deprecation warnings with actions/checkout@v4 and actions/setup-python@v5.
