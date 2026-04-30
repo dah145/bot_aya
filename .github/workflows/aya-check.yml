@@ -52,3 +52,17 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python bot_aya.py
+
+      - name: Commit state file if changed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --local user.email "bot@aya.local"
+          git config --local user.name "AyA Bot"
+          git add estado_anterior.json
+          if git diff --staged --quiet; then
+            echo "No hay cambios en el estado para commitear"
+          else
+            git commit -m "Update: estado de interrupciones de agua $(date +'%Y-%m-%d %H:%M')"
+            git push
+          fi
