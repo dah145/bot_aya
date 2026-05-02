@@ -113,12 +113,6 @@ def revisar_pagina():
             
             print(f"Se encontraron {len(interrupciones_agua)} interrupciones de agua potable.")
             
-            # Caso inicial: primera ejecución sin estado previo
-            if not ids_anteriores:
-                print("Primera ejecución: guardando estado sin enviar mensaje.")
-                guardar_estado(list(ids_actuales))
-                return
-            
             # Detectar cambios
             nuevas = ids_actuales - ids_anteriores
             resueltas = ids_anteriores - ids_actuales
