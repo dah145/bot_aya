@@ -89,8 +89,12 @@ def revisar_pagina():
             entidades = data.get("entidad")
             if not entidades:
                 print("No se encontraron interrupciones.")
-                # Guardar estado vacío si no hay interrupciones
-                if not ids_anteriores:
+                # Si había interrupciones antes y ahora no hay, informar que se resolvieron
+                if ids_anteriores:
+                    mensaje_resueltas = "✅ Se han resuelto todas las interrupciones de agua potable."
+                    enviar_mensaje_telegram(mensaje_resueltas)
+                    guardar_estado([])
+                else:
                     guardar_estado([])
                 return
 
