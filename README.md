@@ -16,8 +16,9 @@ Este repositorio usa un workflow de GitHub Actions que corre cada 15 minutos y e
 ### Qué hace el workflow
 
 - instala Python 3.12
-- instala la dependencia `requests`
-- ejecuta `python bot_aya.py`
+- instala dependencias (`requests`, `python-dotenv`, `playwright`)
+- descarga e instala el navegador Chromium para automatizar la consulta
+- ejecuta `python bot_aya.py` navegando la página web (actualmente configurado para San Sebastián, San José)
 - usa los secretos para enviar mensajes por Telegram sin exponerlos en el código
 - commitea el estado de interrupciones para persistencia entre ejecuciones
 
@@ -47,6 +48,15 @@ python validate_env.py
 ```
 
 ### Ejecutar localmente
+
+Asegúrate de instalar las dependencias necesarias y el navegador de Playwright primero:
+
+```bash
+pip install requests python-dotenv playwright
+playwright install chromium
+```
+
+Luego ejecuta el bot:
 
 ```bash
 python bot_aya.py
